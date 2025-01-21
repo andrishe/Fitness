@@ -1,19 +1,35 @@
 import { Link } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
+
+import { View, Text } from '@/components/general/Themed';
+import CustomButton from '@/components/general/CustomButton';
+
+import WorkoutListItem from '@/components/workouts/WorkoutListItem';
+import workouts from '@/data/dummyWorkouts';
+
+const workout = workouts[0];
 
 export default function Page() {
   return (
     <View
       style={{
         flex: 1,
-
-        alignItems: 'center',
         gap: 10,
+        padding: 10,
+        backgroundColor: 'transparent',
       }}
     >
-      <Text>Resume Current Workout</Text>
-      <Link href="/workout/current">Resume Current workout</Link>
-      <Link href="/workout/123">View Workout 123</Link>
+      <Link href="/workout/current" asChild>
+        <CustomButton title="Current Workout" />
+      </Link>
+
+      <FlatList
+        data={workouts}
+        contentContainerStyle={{ gap: 10 }}
+        renderItem={({ item }) => <WorkoutListItem workout={item} />}
+        keyExtractor={(item) => item.id}
+        showsVerticalScrollIndicator={false}
+      />
     </View>
   );
 }

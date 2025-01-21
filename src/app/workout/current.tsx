@@ -1,12 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from '@/components/general/Themed';
 import React from 'react';
 
 export default function CurrentWorkoutScreen() {
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Text>Current workout screen</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({});
