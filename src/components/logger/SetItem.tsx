@@ -4,6 +4,7 @@ import { Text, TextInput, View } from '@/components/general/Themed';
 import { ExerciseSet } from '@/types/models';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import CustomButton from '../general/CustomButton';
+import { useWorkouts } from '@/store';
 
 type SetItemProps = {
   index: number;
@@ -14,12 +15,14 @@ export default function SetItem({ index, set }: SetItemProps) {
   const [reps, setReps] = useState(set.reps?.toString() || '');
   const [weight, setWeight] = useState(set.weight?.toString() || '');
 
-  const handleRepsChange = () => {
-    console.warn('Reps changed to:', reps);
-  };
+  const updateSet = useWorkouts((state) => state.updateSet);
 
   const handleWeightChange = () => {
-    console.warn('Weight changed to:', weight);
+    updateSet(set.id, { weight: parseInt(weight) });
+  };
+
+  const handleRepsChange = () => {
+    updateSet(set.id, { reps: parseInt(reps) });
   };
 
   const renderRightActions = () => {

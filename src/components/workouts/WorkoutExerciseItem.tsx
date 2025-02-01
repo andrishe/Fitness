@@ -29,10 +29,12 @@ export default function WorkoutExerciseItem({
           <Text style={styles.setIndex}>{index + 1}</Text>
           <Text style={styles.setInfo}>
             {exerciseSet.reps}{' '}
-            {exerciseSet.weight ? `${exerciseSet.weight} kg` : 'resp'}
+            {exerciseSet.weight ? `x ${exerciseSet.weight} kg` : 'resp'}
           </Text>
           {exerciseSet.oneRM && (
-            <Text style={styles.setOneRm}>{Math.floor(exerciseSet.oneRM)}</Text>
+            <Text style={styles.setOneRm}>
+              {Math.floor(exerciseSet.oneRM)} kg
+            </Text>
           )}
         </View>
       ))}

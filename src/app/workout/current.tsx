@@ -3,20 +3,29 @@ import WorkoutExerciseItem from '@/components/logger/WorkoutExerciseItem';
 import React from 'react';
 import { FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
-import { Stack } from 'expo-router';
+import { Redirect, Stack } from 'expo-router';
 import CustomButton from '@/components/general/CustomButton';
 import WorkoutHeader from '@/components/logger/WorkoutHeader';
 import SelectExerciseModal from '@/components/logger/SelectExerciseModal';
+import { useWorkouts } from '@/store';
 
 export default function CurrentWorkoutScreen() {
+  const currentWorkout = useWorkouts((state) => state.currentWorkout);
+  const finishWorkout = useWorkouts((state) => state.finishWorkout);
+  const addExercise = useWorkouts((state) => state.addExercise);
+
   const headerHeight = useHeaderHeight();
+
+  if (!currentWorkout) {
+    return <Redirect href="/" />;
+  }
   return (
     <>
       <Stack.Screen
         options={{
           headerRight: () => (
             <CustomButton
-              onPress={() => console.warn('finish')}
+              onPress={() => finishWorkout()}
               title="Finish"
               style={{ padding: 7, width: 'auto', paddingHorizontal: 15 }}
             />
@@ -29,15 +38,13 @@ export default function CurrentWorkoutScreen() {
         keyboardVerticalOffset={headerHeight}
       >
         <FlatList
-          data={[1, 2]}
+          data={currentWorkout.exercises}
           contentContainerStyle={{ padding: 10, gap: 8 }}
-          renderItem={() => <WorkoutExerciseItem />}
+          renderItem={({ item }) => <WorkoutExerciseItem exercise={item} />}
           ListHeaderComponent={() => <WorkoutHeader />}
           ListFooterComponent={
             <SelectExerciseModal
-              onSelectExercise={(name) =>
-                console.warn('Exercise selected: ', name)
-              }
+              onSelectExercise={(name) => addExercise(name)}
             />
           }
         />

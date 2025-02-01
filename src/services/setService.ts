@@ -1,4 +1,5 @@
 import { ExerciseSet } from '@/types/models';
+import * as Crypto from 'expo-crypto';
 
 export const getBestSet = (sets: ExerciseSet[]) => {
   return sets.reduce((bestSet: ExerciseSet | null, set) => {
@@ -8,4 +9,34 @@ export const getBestSet = (sets: ExerciseSet[]) => {
 
 export const getSetTotalWeight = (set: ExerciseSet) => {
   return (set.weight || 0) * (set.reps || 0);
+};
+
+export const createSet = (exerciseId: string) => {
+  const newSet: ExerciseSet = {
+    id: Crypto.randomUUID(),
+    exerciseId,
+  };
+  return newSet;
+};
+
+export const updateSet = (
+  set: ExerciseSet,
+  updatedFields: Pick<ExerciseSet, 'reps' | 'weight'>
+) => {
+  console.log('Update');
+  const updatedSet = { ...set };
+
+  if (updatedFields.reps !== undefined) {
+    updatedSet.reps = updatedFields.reps;
+  }
+
+  if (updatedFields.weight !== undefined) {
+    updatedSet.weight = updatedFields.weight;
+  }
+
+  if (updatedSet.weight !== undefined && updatedSet.reps !== undefined) {
+    updatedSet.oneRM = updatedSet.weight * (36.0 / (37.0 - updatedSet.reps));
+  }
+
+  return updatedSet;
 };
