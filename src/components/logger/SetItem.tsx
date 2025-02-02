@@ -16,6 +16,7 @@ export default function SetItem({ index, set }: SetItemProps) {
   const [weight, setWeight] = useState(set.weight?.toString() || '');
 
   const updateSet = useWorkouts((state) => state.updateSet);
+  const deleteSet = useWorkouts((state) => state.deleteSet);
 
   const handleWeightChange = () => {
     updateSet(set.id, { weight: parseInt(weight) });
@@ -31,7 +32,7 @@ export default function SetItem({ index, set }: SetItemProps) {
         title="Delete"
         style={{ width: 'auto', padding: 8 }}
         color="crimson"
-        onPress={() => console.warn('Delete set', set.id)}
+        onPress={() => deleteSet(set.id)}
       />
     );
   };

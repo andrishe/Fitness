@@ -5,7 +5,7 @@ import { View, Text } from '@/components/general/Themed';
 import CustomButton from '@/components/general/CustomButton';
 
 import WorkoutListItem from '@/components/workouts/WorkoutListItem';
-import workouts from '@/data/dummyWorkouts';
+
 import { useWorkouts } from '@/store/index';
 
 export default function Page() {

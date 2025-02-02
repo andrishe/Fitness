@@ -1,12 +1,22 @@
-import { WorkoutWithExercises, ExerciseSet } from '@/types/models';
+import {
+  WorkoutWithExercises,
+  ExerciseSet,
+  ExerciseWithSets,
+} from '@/types/models';
 import { create } from 'zustand';
 
-import { finishWorkout, newWorkout } from '@/services/workoutService';
+import {
+  finishWorkout,
+  newWorkout,
+  getCurrentWorkoutsWithExercises,
+  getWorkoutsWithExercises,
+} from '@/services/workoutService';
 import { createExercise } from '@/services/exerciseService';
 import { immer } from 'zustand/middleware/immer';
 import { createSet, updateSet } from '@/services/setService';
 import exercices from '@/data/exercices';
 import { current } from 'immer';
+import { getCurrentWorkout } from '@/db/workouts';
 
 type State = {
   currentWorkout: WorkoutWithExercises | null;
@@ -14,6 +24,8 @@ type State = {
 };
 
 type Actions = {
+  loadWorkouts: () => void;
+
   startWorkout: () => void;
   finishWorkout: () => void;
   addExercise: (name: string) => void;
@@ -23,6 +35,8 @@ type Actions = {
     setId: string,
     updatedFields: Pick<ExerciseSet, 'reps' | 'weight'>
   ) => void;
+
+  deleteSet: (setId: string) => void;
 };
 
 export const useWorkouts = create<State & Actions>()(
@@ -31,6 +45,13 @@ export const useWorkouts = create<State & Actions>()(
     currentWorkout: null,
     workouts: [],
     // Actions
+    loadWorkouts: async () => {
+      set({
+        currentWorkout: await getCurrentWorkoutsWithExercises(),
+        workouts: await getWorkoutsWithExercises(),
+      });
+    },
+
     startWorkout: () => {
       set({ currentWorkout: newWorkout() });
     },
@@ -84,6 +105,28 @@ export const useWorkouts = create<State & Actions>()(
           updatedFields
         );
         exercise.sets[setIndex] = updatedSet;
+      });
+    },
+
+    deleteSet: (setId) => {
+      set(({ currentWorkout }) => {
+        if (!currentWorkout) {
+          return;
+        }
+        const exercise = currentWorkout.exercises.find((exercise) =>
+          exercise.sets.some((set) => set.id === setId)
+        );
+
+        if (!exercise) {
+          return;
+        }
+        exercise.sets = exercise.sets.filter((set) => set.id !== setId);
+
+        if (exercise.sets.length === 0) {
+          currentWorkout.exercises = currentWorkout.exercises.filter(
+            (ex) => ex.id !== exercise.id
+          );
+        }
       });
     },
   }))

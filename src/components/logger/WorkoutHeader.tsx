@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { Text, View } from '@/components/general/Themed';
 import React, { useEffect, useState } from 'react';
-import dummyWorkouts from '@/data/dummyWorkouts';
+
 import { calculateDurationHourMinutes } from '@/utils/time';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useWorkouts } from '@/store';

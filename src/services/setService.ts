@@ -23,7 +23,6 @@ export const updateSet = (
   set: ExerciseSet,
   updatedFields: Pick<ExerciseSet, 'reps' | 'weight'>
 ) => {
-  console.log('Update');
   const updatedSet = { ...set };
 
   if (updatedFields.reps !== undefined) {
@@ -39,4 +38,13 @@ export const updateSet = (
   }
 
   return updatedSet;
+};
+
+const isSetComplete = (set: ExerciseSet) => {
+  return set.reps && set.reps > 0;
+};
+
+export const cleanSets = (sets: ExerciseSet[]) => {
+  const completeSets = sets.filter((set) => isSetComplete(set));
+  return completeSets;
 };
