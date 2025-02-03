@@ -19,7 +19,7 @@ DefaultTheme.colors.primary = Colors.light.tint;
 
 const db = SQLite.openDatabaseSync(dbName);
 
-getDb();
+// getDb();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
